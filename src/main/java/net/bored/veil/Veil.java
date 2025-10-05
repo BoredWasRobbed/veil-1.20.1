@@ -1,24 +1,38 @@
 package net.bored.veil;
 
+import net.bored.veil.command.VeilCommand;
+import net.bored.veil.manager.PlayerDataManager;
 import net.fabricmc.api.ModInitializer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.util.Identifier;
 
 public class Veil implements ModInitializer {
 	public static final String MOD_ID = "veil";
-
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final Identifier CURSED_ENERGY_SYNC_ID = new Identifier(MOD_ID, "cursed_energy_sync");
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+		// Register events and commands
+		registerEvents();
+		CommandRegistrationCallback.EVENT.register(VeilCommand::register);
+	}
 
-		LOGGER.info("Hello Fabric world!");
+	private void registerEvents() {
+		// This event ensures data is sent to the client as soon as they join.
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			PlayerDataManager.getPlayerData(handler.player);
+		});
+
+		// Keep data when a player respawns
+		ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+			PlayerDataManager.PlayerData data = PlayerDataManager.getExistingPlayerData(oldPlayer.getUuid());
+			if (data != null) {
+				PlayerDataManager.updatePlayerData(newPlayer.getUuid(), data);
+				PlayerDataManager.syncCursedEnergy(newPlayer, data);
+			}
+		});
 	}
 }
+
