@@ -1,5 +1,6 @@
 package net.bored.veil;
 
+import net.bored.veil.ability.AbilityRegistry;
 import net.bored.veil.command.VeilCommand;
 import net.bored.veil.manager.PlayerDataManager;
 import net.fabricmc.api.ModInitializer;
@@ -14,6 +15,9 @@ public class Veil implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// Initialize abilities and techniques
+		AbilityRegistry.initializeAbilities();
+
 		// Register events and commands
 		registerEvents();
 		CommandRegistrationCallback.EVENT.register(VeilCommand::register);
@@ -30,9 +34,8 @@ public class Veil implements ModInitializer {
 			PlayerDataManager.PlayerData data = PlayerDataManager.getExistingPlayerData(oldPlayer.getUuid());
 			if (data != null) {
 				PlayerDataManager.updatePlayerData(newPlayer.getUuid(), data);
-				PlayerDataManager.syncCursedEnergy(newPlayer, data);
+				PlayerDataManager.syncPlayerData(newPlayer, data); // Updated to sync all player data
 			}
 		});
 	}
 }
-

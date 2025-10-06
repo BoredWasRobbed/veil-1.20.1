@@ -14,7 +14,9 @@ public class VeilCommand {
                     context.getSource().sendFeedback(() -> Text.literal("Veil Mod - Use subcommands like /veil status"), false);
                     return 1;
                 })
-                .then(StatusCommand.register());
+                .then(StatusCommand.register())
+                .then(SetTechniqueCommand.register())
+                .then(SetAbilityCommand.register()); // Register the new command
 
         dispatcher.register(veilCommand);
     }

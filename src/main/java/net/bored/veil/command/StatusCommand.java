@@ -14,14 +14,14 @@ public class StatusCommand {
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
                     PlayerDataManager.PlayerData data = PlayerDataManager.getPlayerData(player);
-                    player.sendMessage(Text.literal("Clan: " + data.clan() + ", Cursed Energy: " + data.cursedEnergy()), false);
+                    player.sendMessage(Text.literal("Clan: " + data.clan() + ", Technique: " + data.cursedTechnique() + ", Cursed Energy: " + data.cursedEnergy()), false);
                     return 1;
                 })
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                         .executes(context -> {
                             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
                             PlayerDataManager.PlayerData data = PlayerDataManager.getPlayerData(player);
-                            context.getSource().sendFeedback(() -> Text.literal("Player " + player.getName().getString() + " - Clan: " + data.clan() + ", Cursed Energy: " + data.cursedEnergy()), false);
+                            context.getSource().sendFeedback(() -> Text.literal("Player " + player.getName().getString() + " - Clan: " + data.clan() + ", Technique: " + data.cursedTechnique() + ", Cursed Energy: " + data.cursedEnergy()), false);
                             return 1;
                         })
                 );
