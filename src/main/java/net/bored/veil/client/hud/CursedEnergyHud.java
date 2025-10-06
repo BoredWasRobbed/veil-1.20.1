@@ -3,6 +3,7 @@ package net.bored.veil.client.hud;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,9 +34,12 @@ public class CursedEnergyHud {
                 int screenHeight = drawContext.getScaledWindowHeight();
 
                 // Position the text above the hotbar in the bottom-left corner.
-                drawContext.drawTextWithShadow(textRenderer, clanText, 10, screenHeight - 50, 0xFFFFFF);
-                drawContext.drawTextWithShadow(textRenderer, techniqueText, 10, screenHeight - 40, 0xFFFFFF);
-                drawContext.drawTextWithShadow(textRenderer, energyText, 10, screenHeight - 30, 0xFFFFFF);
+                int yPos = screenHeight - 50;
+                drawContext.drawTextWithShadow(textRenderer, clanText, 10, yPos, 0xFFFFFF);
+                yPos += 10;
+                drawContext.drawTextWithShadow(textRenderer, techniqueText, 10, yPos, 0xFFFFFF);
+                yPos += 10;
+                drawContext.drawTextWithShadow(textRenderer, energyText, 10, yPos, 0xFFFFFF);
 
                 // Display the currently selected ability
                 int selectedSlot = client.player.getInventory().selectedSlot;

@@ -26,7 +26,10 @@ public class Veil implements ModInitializer {
 	private void registerEvents() {
 		// This event ensures data is sent to the client as soon as they join.
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			PlayerDataManager.getPlayerData(handler.player);
+			// Get or create the player's data
+			PlayerDataManager.PlayerData data = PlayerDataManager.getPlayerData(handler.player);
+			// ALWAYS sync the data to the client upon joining to ensure the HUD appears.
+			PlayerDataManager.syncPlayerData(handler.player, data);
 		});
 
 		// Keep data when a player respawns
@@ -34,7 +37,7 @@ public class Veil implements ModInitializer {
 			PlayerDataManager.PlayerData data = PlayerDataManager.getExistingPlayerData(oldPlayer.getUuid());
 			if (data != null) {
 				PlayerDataManager.updatePlayerData(newPlayer.getUuid(), data);
-				PlayerDataManager.syncPlayerData(newPlayer, data); // Updated to sync all player data
+				PlayerDataManager.syncPlayerData(newPlayer, data);
 			}
 		});
 	}
